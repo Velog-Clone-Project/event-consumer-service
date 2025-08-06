@@ -1,6 +1,7 @@
 package com.example.eventconsumerservice.consumer;
 
 import com.example.eventconsumerservice.client.UserServiceClient;
+import com.example.eventconsumerservice.config.RabbitProperties;
 import com.example.eventconsumerservice.event.UserCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,11 +15,12 @@ public class UserCreatedConsumer {
 
     // FeignClient를 통해 user-service와 통신
     private final UserServiceClient userServiceClient;
+    private final RabbitProperties properties;
 
     // RabbitMQ에서 UserCreatedEvent를 수신하는 리스너
     @RabbitListener(
             // 어떤 큐에서 메시지를 받을지 지정
-            queues = "${queue.userCreated}",
+            queues = "#{properties.queues.user.created}",
             // 메시지 수신 컨테이너에 재시도/예외 처리 설정을 적용하기 위한 팩토리 사용
             containerFactory = "eventContainerFactory"
     )

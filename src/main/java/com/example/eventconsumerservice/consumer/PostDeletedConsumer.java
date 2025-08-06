@@ -1,6 +1,7 @@
 package com.example.eventconsumerservice.consumer;
 
 import com.example.eventconsumerservice.client.CommentServiceClient;
+import com.example.eventconsumerservice.config.RabbitProperties;
 import com.example.eventconsumerservice.event.PostDeletedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,14 +14,13 @@ import org.springframework.stereotype.Component;
 public class PostDeletedConsumer {
 
     private final CommentServiceClient commentServiceClient;
+    private final RabbitProperties properties;
 
     @RabbitListener(
-            // TODO: 큐이름은 왜 설정파일에서 읽어오는지?
-            queues = "${queue.postDeleted}",
+            queues = "#{properties.queues.post.deleted}",
             containerFactory = "eventContainerFactory"
     )
     public void handlePostDeleted(PostDeletedEvent event) {
-
         log.info("[PostDeleted] Received: {}", event);
 
         try {

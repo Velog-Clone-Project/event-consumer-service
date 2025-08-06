@@ -21,6 +21,7 @@ rabbitmq:
     user:
       created: user.created.queue
       deleted: user.deleted.queue
+      updated: user.updated.queue
     post:
       created: post.created.queue
       deleted: post.deleted.queue
@@ -29,6 +30,7 @@ rabbitmq:
     user:
       created: user.created
       deleted: user.deleted
+      updated: user.updated
     post:
       created: post.created
       deleted: post.deleted

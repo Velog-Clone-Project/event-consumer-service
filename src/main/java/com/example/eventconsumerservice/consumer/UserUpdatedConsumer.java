@@ -4,6 +4,7 @@ import com.example.eventconsumerservice.client.AuthServiceClient;
 import com.example.eventconsumerservice.client.CommentServiceClient;
 import com.example.eventconsumerservice.client.PostServiceClient;
 import com.example.eventconsumerservice.config.RabbitProperties;
+import com.example.eventconsumerservice.event.UpdateAuthorInfoEvent;
 import com.example.eventconsumerservice.event.UserDeletedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,28 +14,26 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class UserDeletedConsumer {
+public class UserUpdatedConsumer {
 
-    private final AuthServiceClient authServiceClient;
     private final PostServiceClient postServiceClient;
     private final CommentServiceClient commentServiceClient;
     private final RabbitProperties properties;
 
     @RabbitListener(
-            queues = "#{properties.queues.user.deleted}",
+            queues = "#{properties.queues.user.updated}",
             containerFactory = "eventContainerFactory"
     )
-    public void handleUserDeleted(UserDeletedEvent event) {
+    public void handleUserUpdated(UpdateAuthorInfoEvent event) {
 
-        log.info("[UserDeleted] Received: {}", event);
+        log.info("[UserUpdated] Received: {}", event);
 
         try {
-            authServiceClient.deleteUser(event.getUserId());
-            postServiceClient.deleteAllCommentsByUserId(event.getUserId());
-            commentServiceClient.deleteAllCommentsByUserId(event.getUserId());
+            postServiceClient.updateAuthorInfo(event);
+            commentServiceClient.updateAuthorInfo(event);
         } catch (Exception e) {
             // 로그만 남기고 throw (→ 재시도 유도)
-            log.error("Failed to process UserDeletedEvent: {}", event, e);
+            log.error("Failed to process UserUpdatedEvent: {}", event, e);
             throw e;
         }
     }

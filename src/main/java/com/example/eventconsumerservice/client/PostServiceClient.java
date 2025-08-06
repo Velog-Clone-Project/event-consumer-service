@@ -4,12 +4,9 @@ import com.example.eventconsumerservice.event.UpdateAuthorInfoEvent;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name = "comment-service", url = "http://comment-service:8004")
-@RequestMapping("internal/comments")
-public interface CommentServiceClient {
-
-    @DeleteMapping("/by-post")
-    void deleteAllCommentsByPostId(@RequestParam(value = "postId") Long postId);
+@FeignClient(name = "post-service", url = "http://post-service:8003")
+@RequestMapping("/internal/posts")
+public interface PostServiceClient {
 
     @PutMapping("/author-info")
     void updateAuthorInfo(@RequestBody UpdateAuthorInfoEvent event);

@@ -14,10 +14,9 @@ import org.springframework.stereotype.Component;
 public class PostDeletedConsumer {
 
     private final CommentServiceClient commentServiceClient;
-    private final RabbitProperties properties;
 
     @RabbitListener(
-            queues = "#{properties.queues.post.deleted}",
+            queues = "#{@rabbitProperties.queues.post.deleted}",
             containerFactory = "eventContainerFactory"
     )
     public void handlePostDeleted(PostDeletedEvent event) {

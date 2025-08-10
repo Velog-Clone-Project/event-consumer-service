@@ -15,12 +15,11 @@ public class UserCreatedConsumer {
 
     // FeignClient를 통해 user-service와 통신
     private final UserServiceClient userServiceClient;
-    private final RabbitProperties properties;
 
     // RabbitMQ에서 UserCreatedEvent를 수신하는 리스너
     @RabbitListener(
             // 어떤 큐에서 메시지를 받을지 지정
-            queues = "#{properties.queues.user.created}",
+            queues = "#{@rabbitProperties.queues.user.created}",
             // 메시지 수신 컨테이너에 재시도/예외 처리 설정을 적용하기 위한 팩토리 사용
             containerFactory = "eventContainerFactory"
     )

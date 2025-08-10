@@ -18,10 +18,9 @@ public class UserDeletedConsumer {
     private final AuthServiceClient authServiceClient;
     private final PostServiceClient postServiceClient;
     private final CommentServiceClient commentServiceClient;
-    private final RabbitProperties properties;
 
     @RabbitListener(
-            queues = "#{properties.queues.user.deleted}",
+            queues = "#{@rabbitProperties.queues.user.deleted}",
             containerFactory = "eventContainerFactory"
     )
     public void handleUserDeleted(UserDeletedEvent event) {

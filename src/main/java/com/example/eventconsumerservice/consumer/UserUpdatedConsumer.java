@@ -18,10 +18,9 @@ public class UserUpdatedConsumer {
 
     private final PostServiceClient postServiceClient;
     private final CommentServiceClient commentServiceClient;
-    private final RabbitProperties properties;
 
     @RabbitListener(
-            queues = "#{properties.queues.user.updated}",
+            queues = "#{@rabbitProperties.queues.user.updated}",
             containerFactory = "eventContainerFactory"
     )
     public void handleUserUpdated(UpdateAuthorInfoEvent event) {

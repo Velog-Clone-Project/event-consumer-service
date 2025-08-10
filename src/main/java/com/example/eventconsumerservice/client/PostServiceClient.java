@@ -4,8 +4,9 @@ import com.example.eventconsumerservice.event.UpdateAuthorInfoEvent;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name = "post-service", url = "http://post-service:8003")
-@RequestMapping("/internal/posts")
+@FeignClient(name = "post-service",
+//        url = "http://post-service:8003",
+        path = "/internal/post")
 public interface PostServiceClient {
 
     @PutMapping("/author-info")

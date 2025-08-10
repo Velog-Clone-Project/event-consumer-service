@@ -4,8 +4,9 @@ import com.example.eventconsumerservice.event.UpdateAuthorInfoEvent;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name = "comment-service", url = "http://comment-service:8004")
-@RequestMapping("internal/comments")
+@FeignClient(name = "comment-service",
+//        url = "http://comment-service:8004",
+path = "/internal/comments")
 public interface CommentServiceClient {
 
     @DeleteMapping("/by-post")

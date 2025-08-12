@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 @FeignClient(name = "post-service",
 //        url = "http://post-service:8003",
-        path = "/internal/post")
+        path = "/internal/posts")
 public interface PostServiceClient {
 
     @PutMapping("/author-info")

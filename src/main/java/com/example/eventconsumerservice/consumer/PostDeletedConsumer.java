@@ -1,7 +1,6 @@
 package com.example.eventconsumerservice.consumer;
 
 import com.example.eventconsumerservice.client.CommentServiceClient;
-import com.example.eventconsumerservice.config.RabbitProperties;
 import com.example.eventconsumerservice.event.PostDeletedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +15,7 @@ public class PostDeletedConsumer {
     private final CommentServiceClient commentServiceClient;
 
     @RabbitListener(
-            queues = "#{@rabbitProperties.queues.post.deleted}",
+            queues = "${rabbitmq.queues.post.deleted}",
             containerFactory = "eventContainerFactory"
     )
     public void handlePostDeleted(PostDeletedEvent event) {

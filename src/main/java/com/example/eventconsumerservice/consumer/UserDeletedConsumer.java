@@ -3,7 +3,6 @@ package com.example.eventconsumerservice.consumer;
 import com.example.eventconsumerservice.client.AuthServiceClient;
 import com.example.eventconsumerservice.client.CommentServiceClient;
 import com.example.eventconsumerservice.client.PostServiceClient;
-import com.example.eventconsumerservice.config.RabbitProperties;
 import com.example.eventconsumerservice.event.UserDeletedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +19,7 @@ public class UserDeletedConsumer {
     private final CommentServiceClient commentServiceClient;
 
     @RabbitListener(
-            queues = "#{@rabbitProperties.queues.user.deleted}",
+            queues = "${rabbitmq.queues.user.deleted}",
             containerFactory = "eventContainerFactory"
     )
     public void handleUserDeleted(UserDeletedEvent event) {

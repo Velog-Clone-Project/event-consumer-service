@@ -1,11 +1,8 @@
 package com.example.eventconsumerservice.consumer;
 
-import com.example.eventconsumerservice.client.AuthServiceClient;
 import com.example.eventconsumerservice.client.CommentServiceClient;
 import com.example.eventconsumerservice.client.PostServiceClient;
-import com.example.eventconsumerservice.config.RabbitProperties;
 import com.example.eventconsumerservice.event.UpdateAuthorInfoEvent;
-import com.example.eventconsumerservice.event.UserDeletedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -20,7 +17,7 @@ public class UserUpdatedConsumer {
     private final CommentServiceClient commentServiceClient;
 
     @RabbitListener(
-            queues = "#{@rabbitProperties.queues.user.updated}",
+            queues = "${rabbitmq.queues.user.updated}",
             containerFactory = "eventContainerFactory"
     )
     public void handleUserUpdated(UpdateAuthorInfoEvent event) {

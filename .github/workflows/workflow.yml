@@ -1,0 +1,61 @@
+name: Deploy Event Consumer Service
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: [ self-hosted, event-consumer-service ]
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Grant Gradle wrapper permission
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew clean build
+
+  deploy:
+    runs-on: [ self-hosted, event-consumer-service ]
+    needs: build
+
+    steps:
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.DOCKER_USER }}/event-consumer-service:latest .
+
+      - name: Push Docker image
+        run: |
+          echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
+          docker push ${{ secrets.DOCKER_USER }}/event-consumer-service:latest
+
+      - name: Copy Kubernetes manifest to server
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "./k8s/event-consumer-service.yml"
+          target: "~/event-consumer/"
+
+      - name: Deploy to Kubernetes on remote server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ~/event-consumer/k8s
+            kubectl delete deployment event-consumer-service --ignore-not-found
+            kubectl apply -f event-consumer-service.yml
